@@ -73,10 +73,6 @@ export default function ProductListView() {
     product.name.toLowerCase().includes(filteredSearchTerm.toLowerCase())
   );
 
-  const handleAddProduct = () => {
-    console.log("상품 추가 페이지로 이동");
-  };
-
   const handleSearch = (searchKeyword: string) => {
     setFilteredSearchTerm(searchKeyword);
     console.log("검색 실행:", searchKeyword);
@@ -87,7 +83,6 @@ export default function ProductListView() {
       <ProductSearchBar
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
-        onAddProduct={handleAddProduct}
         onSearch={handleSearch}
       />
       <ProductTable
