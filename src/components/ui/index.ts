@@ -13,4 +13,3 @@ export * from "./badge";
 export * from "./table";
 export * from "./select";
 export * from "./radio-group";
-export * from "../ImageUpload";
