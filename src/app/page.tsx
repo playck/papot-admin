@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import ExampleForm from "@/components/example-form";
 
 export default function Home() {
   return (
@@ -18,7 +19,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader>
               <CardTitle>상품 목록</CardTitle>
@@ -55,6 +56,9 @@ export default function Home() {
             </CardContent>
           </Card>
         </div>
+
+        {/* React Hook Form 예시 */}
+        <ExampleForm />
       </div>
     </div>
   );
