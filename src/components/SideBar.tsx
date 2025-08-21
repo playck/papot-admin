@@ -19,7 +19,7 @@ export default function Sidebar() {
   const [activeMenu, setActiveMenu] = useState("dashboard");
 
   return (
-    <div className="w-[12.5%] min-h-screen bg-white border-r border-gray-200 shadow-sm">
+    <div className="w-[12.5%] min-w-[12%] min-h-screen bg-white border-r border-gray-200 shadow-sm">
       <div className="p-6">
         <h2 className="text-xl font-bold text-gray-800 mb-8">🐼 PAPOT ADMIN</h2>
 
@@ -28,7 +28,7 @@ export default function Sidebar() {
             <button
               key={item.id}
               onClick={() => setActiveMenu(item.id)}
-              className={`w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors duration-200 ${
+              className={`w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors duration-200 cursor-pointer ${
                 activeMenu === item.id
                   ? "bg-blue-50 text-green-700 border-l-4 border-green-700 font-semibold"
                   : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
