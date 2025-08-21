@@ -75,7 +75,6 @@ export const FormTextarea = React.forwardRef<
             />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
-          <FormMessage />
         </FormItem>
       )}
     />

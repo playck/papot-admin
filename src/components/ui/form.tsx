@@ -94,7 +94,7 @@ const FormLabel = React.forwardRef<
     <label
       ref={ref}
       className={cn(
-        "block mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+        "block mb-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
         error && "text-destructive",
         className
       )}
