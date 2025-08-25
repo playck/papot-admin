@@ -9,6 +9,9 @@ export const productDetailSchema = z.object({
     .min(1, "상품 이름을 입력해주세요")
     .max(100, "상품 이름은 100자 이하로 입력해주세요"),
 
+  // 상품 카테고리
+  categoryId: z.number().min(1, "카테고리를 선택해주세요"),
+
   // 상품 이미지 (여러개 가능)
   images: z
     .array(z.string().url("올바른 이미지 URL을 입력해주세요"))
@@ -53,6 +56,7 @@ export type ProductDetailFormData = z.infer<typeof productDetailSchema>;
 
 const defaultValues: ProductDetailFormData = {
   name: "",
+  categoryId: 1,
   images: [],
   isPublished: false,
   description: "",

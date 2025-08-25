@@ -42,7 +42,7 @@ export default function ProductRow({ product }: ProductRowProps) {
 
   return (
     <TableRow key={product.id}>
-      <TableCell className="font-medium">{product.name}</TableCell>
+      <TableCell className="font-medium pl-3">{product.name}</TableCell>
       <TableCell>{formatPrice(product.price)}</TableCell>
       <TableCell>
         <span className={getQuantityColor(product.quantity)}>

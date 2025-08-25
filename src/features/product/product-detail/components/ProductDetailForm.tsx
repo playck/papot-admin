@@ -18,22 +18,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { FileUpload, BadgeInput } from "@/components";
+import { useCreateProduct } from "../services/useCreateProduct";
 
 interface ProductDetailFormProps {
   initialData?: Partial<ProductDetailFormData>;
-  onSubmit?: (data: ProductDetailFormData) => void;
 }
 
 export default function ProductDetailForm({
   initialData,
-  onSubmit,
 }: ProductDetailFormProps) {
   const { methods, handleSubmit } = useProductDetailForm(initialData);
-
-  const onFormSubmit = (data: ProductDetailFormData) => {
-    console.log("Form submitted:", data);
-    onSubmit?.(data);
-  };
+  const { mutate: createProductMutation, isPending } = useCreateProduct();
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -45,7 +40,15 @@ export default function ProductDetailForm({
         </CardHeader>
         <CardContent>
           <Form {...methods}>
-            <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
+            <form
+              onSubmit={handleSubmit((data) => {
+                createProductMutation({
+                  productData: data,
+                  categoryId: data.categoryId,
+                });
+              })}
+              className="space-y-6"
+            >
               {/* 상품 기본 정보 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
@@ -104,6 +107,44 @@ export default function ProductDetailForm({
                   />
                 </div>
               </div>
+
+              {/* 상품 카테고리 */}
+              <FormField
+                control={methods.control}
+                name="categoryId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>상품 카테고리 *</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={(value) =>
+                          field.onChange(parseInt(value))
+                        }
+                        value={field.value?.toString()}
+                        className="flex space-x-3 mt-4"
+                      >
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="1" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer mb-0">
+                            화분
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="2" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer mb-0">
+                            꽃
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               {/* 상품 설명 */}
               <FormField
@@ -229,7 +270,9 @@ export default function ProductDetailForm({
                 <Button type="button" variant="outline">
                   취소
                 </Button>
-                <Button type="submit">상품 저장</Button>
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? "저장 중..." : "상품 저장"}
+                </Button>
               </div>
             </form>
           </Form>

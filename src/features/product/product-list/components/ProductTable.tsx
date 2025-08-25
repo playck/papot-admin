@@ -36,13 +36,12 @@ export default function ProductTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>상품명</TableHead>
+              <TableHead className="pl-3">상품명</TableHead>
               <TableHead>가격</TableHead>
               <TableHead>재고</TableHead>
               <TableHead>상태</TableHead>
               <TableHead>뱃지</TableHead>
               <TableHead>등록일</TableHead>
-              <TableHead className="text-center">상세보기</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -76,7 +75,7 @@ export default function ProductTable({
       </div>
 
       {/* 페이지네이션 (추후 구현) */}
-      <div className="border-t px-6 py-4">
+      <div className="border-t pl-3 pr-6 py-4">
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-500">총 {products.length}개의 상품</p>
           <div className="flex gap-2">
