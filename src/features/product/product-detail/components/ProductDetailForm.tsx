@@ -17,7 +17,7 @@ import { FormTextarea } from "@/components/ui/form-textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { FileUpload, BadgeInput } from "@/components";
+import { ImageUpload, BadgeInput } from "@/components";
 import { useCreateProduct } from "../services/useCreateProduct";
 
 interface ProductDetailFormProps {
@@ -63,7 +63,6 @@ export default function ProductDetailForm({
                           {...field}
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -168,9 +167,11 @@ export default function ProductDetailForm({
               {/* 상품 이미지 */}
               <div className="space-y-4">
                 <FormLabel>상품 이미지 *</FormLabel>
-                <FileUpload
-                  value={methods.watch("images") || []}
-                  onChange={(images) => methods.setValue("images", images)}
+                <ImageUpload
+                  images={methods.watch("images") || []}
+                  onChange={(images: string[]) =>
+                    methods.setValue("images", images)
+                  }
                   maxFiles={10}
                   placeholder="이미지를 선택하거나 드래그하세요 (여러 개 선택 가능)"
                 />

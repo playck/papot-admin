@@ -23,6 +23,10 @@ export interface ProductImage {
   createdAt: string;
 }
 
+export interface UploadedImageData {
+  url: string;
+}
+
 export interface ProductBadge {
   id: string;
   productId: string;
@@ -31,7 +35,7 @@ export interface ProductBadge {
 }
 
 export interface Category {
-  id: number; // BIGINT 타입에 맞춰 수정
+  id: number;
   name: string;
   description?: string;
   createdAt: string;
@@ -42,12 +46,13 @@ export interface CreateProductRequest {
   name: string;
   description: string;
   price: number;
-  discountRate?: number;
+  discount_rate?: number;
   quantity: number;
-  isPublished?: boolean;
-  categoryId: number; // BIGINT 타입에 맞춰 수정
-  images: string[]; // 이미지 URL 배열
-  badges: string[]; // 뱃지 이름 배열
+  is_published?: boolean;
+  category_id: number;
+  images: UploadedImageData[];
+  badges: string[];
+  uploaded_by?: string;
 }
 
 export interface UpdateProductRequest extends Partial<CreateProductRequest> {
