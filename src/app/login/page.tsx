@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/services/supabase/client";
@@ -10,6 +11,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,6 +28,9 @@ export default function LoginPage() {
         setMessage(`로그인 실패: ${error.message}`);
       } else {
         setMessage("로그인 성공!");
+        setTimeout(() => {
+          router.push("/");
+        }, 1000);
       }
     } catch (error) {
       setMessage("로그인 중 오류가 발생했습니다.");
