@@ -9,9 +9,9 @@ export interface Product {
   categoryId: number; // BIGINT는 JavaScript에서 number로 처리
   category?: Category;
   images: ProductImage[];
-  badges: ProductBadge[];
   createdAt: string;
   updatedAt: string;
+  uploadedBy?: string;
 }
 
 export interface ProductImage {
@@ -27,19 +27,12 @@ export interface UploadedImageData {
   url: string;
 }
 
-export interface ProductBadge {
-  id: string;
-  productId: string;
-  badgeName: string;
-  createdAt: string;
-}
-
 export interface Category {
   id: number;
   name: string;
   description?: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface CreateProductRequest {
@@ -51,7 +44,6 @@ export interface CreateProductRequest {
   is_published?: boolean;
   category_id: number;
   images: UploadedImageData[];
-  badges: string[];
   uploaded_by?: string;
 }
 
