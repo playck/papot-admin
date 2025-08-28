@@ -1,4 +1,4 @@
-import { Product } from "@/types/product";
+import { Product } from "@/features/product/types/product";
 
 /**
  * 상품 리스트 응답 데이터를 Product 타입으로 변환하는 어댑터
@@ -13,6 +13,7 @@ class ProductListResponseAdapter {
   /**
    * 단일 상품 데이터 변환
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private adaptSingleProduct(item: any): Product {
     return {
       id: item.id as string,
@@ -27,6 +28,7 @@ class ProductListResponseAdapter {
       updatedAt: item.updated_at as string,
       uploadedBy: item.uploaded_by as string,
       images: this.adaptProductImages(item.product_images || [], item.id),
+      badges: Array.isArray(item.badges) ? item.badges : [], // 배지는 배열로 저장됨
       category: this.adaptCategory(item.categories),
     };
   }
@@ -34,22 +36,28 @@ class ProductListResponseAdapter {
   /**
    * 상품 이미지 배열 변환
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private adaptProductImages(images: any[], productId: string) {
-    return images
-      .sort((a: any, b: any) => a.display_order - b.display_order)
-      .map((img: any) => ({
-        id: img.id as string,
-        productId: productId,
-        imageUrl: img.image_url as string,
-        displayOrder: img.display_order as number,
-        isPrimary: img.is_primary as boolean,
-        createdAt: img.created_at as string,
-      }));
+    return (
+      images
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .sort((a: any, b: any) => a.display_order - b.display_order)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((img: any) => ({
+          id: img.id as string,
+          productId: productId,
+          imageUrl: img.image_url as string,
+          displayOrder: img.display_order as number,
+          isPrimary: img.is_primary as boolean,
+          createdAt: img.created_at as string,
+        }))
+    );
   }
 
   /**
    * 카테고리 데이터 변환
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private adaptCategory(categoryData: any) {
     if (!categoryData) return undefined;
 

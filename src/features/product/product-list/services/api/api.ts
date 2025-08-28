@@ -1,5 +1,5 @@
 import { supabase } from "@/services/supabase/client";
-import { Product } from "@/types/product";
+import { Product } from "@/features/product/types/product";
 import ProductListResponseAdapter from "@/features/product/product-list/adapter/ProductListResponseAdapter";
 
 export interface ProductListResponse {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -31,6 +32,7 @@ export default function ProductDetailForm({
   initialData,
 }: ProductDetailFormProps) {
   const { user } = useAuth();
+  const router = useRouter();
   const { methods, handleSubmit } = useProductDetailForm(initialData);
   const { mutate: createProductMutation, isPending } = useCreateProduct();
   const { showSuccess, showError } = useToast();
@@ -59,7 +61,11 @@ export default function ProductDetailForm({
                         "상품 등록 완료!",
                         "상품이 성공적으로 등록되었습니다."
                       );
-                      methods.reset(); // 폼 초기화
+                      methods.reset();
+
+                      setTimeout(() => {
+                        router.push("/product/list");
+                      }, 1500);
                     },
                     onError: (error) => {
                       showError(

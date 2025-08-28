@@ -1,4 +1,4 @@
-import { CreateProductRequest } from "@/types/product";
+import { CreateProductRequest } from "@/features/product/types/product";
 import { ProductDetailFormData } from "../hooks/useProductDetailForm";
 
 export default class ProductFormAdapter {

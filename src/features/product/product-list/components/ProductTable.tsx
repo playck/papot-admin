@@ -9,17 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Product } from "@/features/product/types/product";
 import ProductRow from "./ProductRow";
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  status: "active" | "inactive";
-  badges: string[];
-  createdAt: string;
-}
 
 interface ProductTableProps {
   products: Product[];
