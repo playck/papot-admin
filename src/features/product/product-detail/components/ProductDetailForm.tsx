@@ -1,10 +1,6 @@
 "use client";
 
 import {
-  useProductDetailForm,
-  ProductDetailFormData,
-} from "../hooks/useProductDetailForm";
-import {
   Form,
   FormControl,
   FormField,
@@ -18,8 +14,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ImageUpload, BadgeInput } from "@/components";
-import { useCreateProduct } from "../services/useCreateProduct";
+import { useToast } from "@/providers/toast-provider";
 import { useAuth } from "@/services/hooks/useAuth";
+
+import {
+  useProductDetailForm,
+  ProductDetailFormData,
+} from "../hooks/useProductDetailForm";
+import { useCreateProduct } from "../services/useCreateProduct";
 
 interface ProductDetailFormProps {
   initialData?: Partial<ProductDetailFormData>;
@@ -28,9 +30,10 @@ interface ProductDetailFormProps {
 export default function ProductDetailForm({
   initialData,
 }: ProductDetailFormProps) {
+  const { user } = useAuth();
   const { methods, handleSubmit } = useProductDetailForm(initialData);
   const { mutate: createProductMutation, isPending } = useCreateProduct();
-  const { user } = useAuth();
+  const { showSuccess, showError } = useToast();
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -44,11 +47,28 @@ export default function ProductDetailForm({
           <Form {...methods}>
             <form
               onSubmit={handleSubmit((data) => {
-                createProductMutation({
-                  productData: data,
-                  categoryId: data.categoryId,
-                  userId: user?.id,
-                });
+                createProductMutation(
+                  {
+                    productData: data,
+                    categoryId: data.categoryId,
+                    userId: user?.id,
+                  },
+                  {
+                    onSuccess: () => {
+                      showSuccess(
+                        "상품 등록 완료!",
+                        "상품이 성공적으로 등록되었습니다."
+                      );
+                      methods.reset(); // 폼 초기화
+                    },
+                    onError: (error) => {
+                      showError(
+                        "상품 등록 실패",
+                        error.message || "상품 등록 중 오류가 발생했습니다."
+                      );
+                    },
+                  }
+                );
               })}
               className="space-y-6"
             >
