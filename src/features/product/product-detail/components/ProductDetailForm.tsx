@@ -19,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ImageUpload, BadgeInput } from "@/components";
 import { useCreateProduct } from "../services/useCreateProduct";
+import { useAuth } from "@/services/hooks/useAuth";
 
 interface ProductDetailFormProps {
   initialData?: Partial<ProductDetailFormData>;
@@ -29,6 +30,7 @@ export default function ProductDetailForm({
 }: ProductDetailFormProps) {
   const { methods, handleSubmit } = useProductDetailForm(initialData);
   const { mutate: createProductMutation, isPending } = useCreateProduct();
+  const { user } = useAuth();
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -45,6 +47,7 @@ export default function ProductDetailForm({
                 createProductMutation({
                   productData: data,
                   categoryId: data.categoryId,
+                  userId: user?.id,
                 });
               })}
               className="space-y-6"
