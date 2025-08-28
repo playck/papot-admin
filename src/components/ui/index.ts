@@ -11,6 +11,7 @@ export * from "./card";
 export * from "./input";
 export * from "./badge";
 export * from "./table";
+export * from "./loading-spinner";
 export * from "./select";
 export * from "./radio-group";
 export * from "./toast";
