@@ -1,5 +1,5 @@
 import { supabase } from "@/services/supabase/client";
-import { CreateProductRequest } from "@/types/product";
+import { CreateProductRequest } from "@/features/product/types/product";
 
 export const createProduct = async (productData: CreateProductRequest) => {
   try {

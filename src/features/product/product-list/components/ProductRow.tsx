@@ -3,25 +3,16 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { formatPrice } from "@/lib/utils";
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  status: "active" | "inactive";
-  badges: string[];
-  createdAt: string;
-}
+import { Product } from "@/features/product/types/product";
+import { formatDate, formatPrice } from "@/lib/utils";
 
 interface ProductRowProps {
   product: Product;
 }
 
 export default function ProductRow({ product }: ProductRowProps) {
-  const getStatusBadge = (status: "active" | "inactive") => {
-    return status === "active" ? (
+  const getStatusBadge = (isPublished: boolean) => {
+    return isPublished ? (
       <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
         판매중
       </Badge>
@@ -49,17 +40,23 @@ export default function ProductRow({ product }: ProductRowProps) {
           {product.quantity}개
         </span>
       </TableCell>
-      <TableCell>{getStatusBadge(product.status)}</TableCell>
+      <TableCell>{getStatusBadge(product.isPublished)}</TableCell>
       <TableCell>
         <div className="flex flex-wrap gap-1">
-          {product.badges.map((badge, index) => (
-            <Badge key={index} variant="outline" className="text-xs">
-              {badge}
-            </Badge>
-          ))}
+          {product.badges && product.badges.length > 0 ? (
+            product.badges.map((badge, index) => (
+              <Badge key={index} variant="outline" className="text-xs">
+                {badge}
+              </Badge>
+            ))
+          ) : (
+            <span className="text-gray-400 text-sm">-</span>
+          )}
         </div>
       </TableCell>
-      <TableCell className="text-gray-500">{product.createdAt}</TableCell>
+      <TableCell className="text-gray-500">
+        {formatDate(product.createdAt)}
+      </TableCell>
       <TableCell className="text-right">
         <Button
           variant="outline"
