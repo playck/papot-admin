@@ -17,7 +17,7 @@ export const useCreateProduct = () => {
         productData,
         categoryId,
         userId
-      ).adapt();
+      ).adaptForCreate();
       return createProduct(data);
     },
     onSuccess: (data) => {

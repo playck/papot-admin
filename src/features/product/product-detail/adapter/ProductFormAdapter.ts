@@ -1,6 +1,11 @@
 import { CreateProductRequest } from "@/features/product/types/product";
 import { ProductDetailFormData } from "../hooks/useProductDetailForm";
 
+interface UpdateProductRequest
+  extends Omit<CreateProductRequest, "uploaded_by"> {
+  id: string;
+}
+
 export default class ProductFormAdapter {
   private formData: ProductDetailFormData;
   private categoryId?: number;
@@ -30,7 +35,7 @@ export default class ProductFormAdapter {
     return Math.floor(Math.max(0, Math.min(100, discountRate)));
   }
 
-  adapt(): CreateProductRequest {
+  adaptForCreate(): CreateProductRequest {
     if (!this.categoryId) {
       throw new Error(
         "categoryId는 필수 값입니다. ProductFormAdapter 생성 시 categoryId를 제공해주세요."
@@ -50,6 +55,29 @@ export default class ProductFormAdapter {
       })),
       badges: this.convertBadges(this.formData.badges),
       uploaded_by: this.userId,
+    };
+  }
+
+  adaptForUpdate(productId: string): UpdateProductRequest {
+    if (!this.categoryId) {
+      throw new Error(
+        "categoryId는 필수 값입니다. ProductFormAdapter 생성 시 categoryId를 제공해주세요."
+      );
+    }
+
+    return {
+      id: productId,
+      name: this.formData.name.trim(),
+      description: this.formData.description.trim(),
+      price: this.convertPrice(this.formData.price),
+      discount_rate: this.convertDiscountRate(this.formData.discountRate),
+      quantity: Math.floor(this.formData.quantity),
+      is_published: this.formData.isPublished,
+      category_id: this.categoryId,
+      images: this.formData.images.map((image) => ({
+        url: image,
+      })),
+      badges: this.convertBadges(this.formData.badges),
     };
   }
 }

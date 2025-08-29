@@ -49,13 +49,14 @@ export interface CreateProductRequest {
   uploaded_by?: string;
 }
 
-export interface UpdateProductRequest extends Partial<CreateProductRequest> {
-  id: string;
-}
-
 export interface ProductListResponse {
   products: Product[];
   total: number;
   page: number;
   limit: number;
+}
+
+export interface UpdateProductRequest
+  extends Omit<CreateProductRequest, "uploaded_by"> {
+  id: string;
 }
