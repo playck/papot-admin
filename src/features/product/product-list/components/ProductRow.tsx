@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -11,6 +12,8 @@ interface ProductRowProps {
 }
 
 export default function ProductRow({ product }: ProductRowProps) {
+  const router = useRouter();
+
   const getStatusBadge = (isPublished: boolean) => {
     return isPublished ? (
       <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
@@ -28,7 +31,7 @@ export default function ProductRow({ product }: ProductRowProps) {
   };
 
   const handleViewDetail = () => {
-    console.log(`상품 상세보기: ${product.id}`);
+    router.push(`/product/detail/${product.id}`);
   };
 
   return (
