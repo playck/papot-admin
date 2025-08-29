@@ -61,5 +61,11 @@ export default function ProductDetailPage() {
 
   const initialData = ProductDetailAdapter.adapt(product);
 
-  return <ProductDetailForm initialData={initialData} isEditMode={true} />;
+  return (
+    <ProductDetailForm
+      initialData={initialData}
+      isEditMode={true}
+      productId={productId}
+    />
+  );
 }
