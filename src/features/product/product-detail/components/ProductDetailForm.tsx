@@ -23,58 +23,95 @@ import {
   ProductDetailFormData,
 } from "../hooks/useProductDetailForm";
 import { useCreateProduct } from "../services/useCreateProduct";
+import { useUpdateProduct } from "../services/useUpdateProduct";
 
 interface ProductDetailFormProps {
   initialData?: Partial<ProductDetailFormData>;
+  isEditMode?: boolean;
+  productId?: string; // 수정 모드
 }
 
 export default function ProductDetailForm({
   initialData,
+  isEditMode = false,
+  productId,
 }: ProductDetailFormProps) {
   const { user } = useAuth();
   const router = useRouter();
   const { methods, handleSubmit } = useProductDetailForm(initialData);
-  const { mutate: createProductMutation, isPending } = useCreateProduct();
+  const { mutate: createProductMutation, isPending: isCreating } =
+    useCreateProduct();
+  const { mutate: updateProductMutation, isPending: isUpdating } =
+    useUpdateProduct();
   const { showSuccess, showError } = useToast();
+
+  const isPending = isCreating || isUpdating;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="text-lg font-semibold">
-            상품 상세 정보
+            {isEditMode ? "상품 정보 수정" : "상품 등록"}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...methods}>
             <form
               onSubmit={handleSubmit((data) => {
-                createProductMutation(
-                  {
-                    productData: data,
-                    categoryId: data.categoryId,
-                    userId: user?.id,
-                  },
-                  {
-                    onSuccess: () => {
-                      showSuccess(
-                        "상품 등록 완료!",
-                        "상품이 성공적으로 등록되었습니다."
-                      );
-                      methods.reset();
-
-                      setTimeout(() => {
-                        router.push("/product/list");
-                      }, 1500);
-                    },
-                    onError: (error) => {
-                      showError(
-                        "상품 등록 실패",
-                        error.message || "상품 등록 중 오류가 발생했습니다."
-                      );
-                    },
+                const successCallback = () => {
+                  showSuccess(
+                    isEditMode ? "상품 수정 완료!" : "상품 등록 완료!",
+                    isEditMode
+                      ? "상품이 성공적으로 수정되었습니다."
+                      : "상품이 성공적으로 등록되었습니다."
+                  );
+                  if (!isEditMode) {
+                    methods.reset();
                   }
-                );
+
+                  setTimeout(() => {
+                    router.push("/product/list");
+                  }, 1500);
+                };
+
+                const errorCallback = (error: Error) => {
+                  showError(
+                    isEditMode ? "상품 수정 실패" : "상품 등록 실패",
+                    error.message ||
+                      (isEditMode
+                        ? "상품 수정 중 오류가 발생했습니다."
+                        : "상품 등록 중 오류가 발생했습니다.")
+                  );
+                };
+
+                if (isEditMode && productId) {
+                  // 수정 모드
+                  updateProductMutation(
+                    {
+                      productId,
+                      productData: data,
+                      categoryId: data.categoryId,
+                    },
+                    {
+                      onSuccess: successCallback,
+                      onError: errorCallback,
+                    }
+                  );
+                } else {
+                  // 생성 모드
+                  createProductMutation(
+                    {
+                      productData: data,
+                      categoryId: data.categoryId,
+                      userId: user?.id,
+                    },
+                    {
+                      onSuccess: successCallback,
+                      onError: errorCallback,
+                    }
+                  );
+                }
               })}
               className="space-y-6"
             >
@@ -301,7 +338,11 @@ export default function ProductDetailForm({
                   취소
                 </Button>
                 <Button type="submit" disabled={isPending}>
-                  {isPending ? "저장 중..." : "상품 저장"}
+                  {isPending
+                    ? "저장 중..."
+                    : isEditMode
+                    ? "상품 수정"
+                    : "상품 저장"}
                 </Button>
               </div>
             </form>
