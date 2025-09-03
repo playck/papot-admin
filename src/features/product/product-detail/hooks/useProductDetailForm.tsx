@@ -50,6 +50,12 @@ export const productDetailSchema = z.object({
     .number()
     .min(0, "할인률은 0% 이상이어야 합니다")
     .max(100, "할인률은 100% 이하여야 합니다"),
+
+  // 상품 상세 설명 (에디터)
+  detailDescription: z
+    .string()
+    .min(1, "상품 상세 설명을 입력해주세요")
+    .optional(),
 });
 
 export type ProductDetailFormData = z.infer<typeof productDetailSchema>;
@@ -64,6 +70,7 @@ const defaultValues: ProductDetailFormData = {
   badges: [],
   price: 0,
   discountRate: 0,
+  detailDescription: "",
 };
 
 export function useProductDetailForm(

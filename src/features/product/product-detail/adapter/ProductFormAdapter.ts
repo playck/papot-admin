@@ -45,6 +45,7 @@ export default class ProductFormAdapter {
     return {
       name: this.formData.name.trim(),
       description: this.formData.description.trim(),
+      detail_description: this.formData.detailDescription?.trim() || "",
       price: this.convertPrice(this.formData.price),
       discount_rate: this.convertDiscountRate(this.formData.discountRate),
       quantity: Math.floor(this.formData.quantity),
@@ -67,6 +68,7 @@ export default class ProductFormAdapter {
       id: productId,
       name: this.formData.name.trim(),
       description: this.formData.description.trim(),
+      detail_description: this.formData.detailDescription?.trim() || "",
       price: this.convertPrice(this.formData.price),
       discount_rate: this.convertDiscountRate(this.formData.discountRate),
       quantity: Math.floor(this.formData.quantity),

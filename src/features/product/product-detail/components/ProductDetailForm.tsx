@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ImageUpload, BadgeInput } from "@/components";
+import { Editor } from "@/components/editor";
 import { useToast } from "@/providers/toast-provider";
 import { useAuth } from "@/services/hooks/useAuth";
 
@@ -59,6 +60,7 @@ export default function ProductDetailForm({
           <Form {...methods}>
             <form
               onSubmit={handleSubmit((data) => {
+                console.log(data);
                 const successCallback = () => {
                   showSuccess(
                     isEditMode ? "상품 수정 완료!" : "상품 등록 완료!",
@@ -211,16 +213,16 @@ export default function ProductDetailForm({
                 )}
               />
 
-              {/* 상품 설명 */}
+              {/* 상품 간단 설명 */}
               <FormField
                 control={methods.control}
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>상품 설명 *</FormLabel>
+                    <FormLabel>상품 간단 설명 *</FormLabel>
                     <FormControl>
                       <FormTextarea
-                        placeholder="상품에 대한 자세한 설명을 입력하세요"
+                        placeholder="상품에 대한 간단한 설명을 입력하세요"
                         rows={4}
                         {...field}
                       />
@@ -332,8 +334,29 @@ export default function ProductDetailForm({
                 )}
               </div>
 
+              {/* 상품 상세 설명 (에디터) */}
+              <FormField
+                control={methods.control}
+                name="detailDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>상품 상세 설명</FormLabel>
+                    <FormControl>
+                      <Editor
+                        initialValue={field.value || ""}
+                        placeholder="상품에 대한 상세한 설명을 입력 해 주세요."
+                        onChange={field.onChange}
+                        showPreview={true}
+                        className="w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* 제출 버튼 */}
-              <div className="flex justify-end space-x-3 pt-6">
+              <div className="flex justify-end space-x-3">
                 <Button type="button" variant="outline">
                   취소
                 </Button>

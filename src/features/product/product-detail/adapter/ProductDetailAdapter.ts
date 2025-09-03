@@ -12,6 +12,7 @@ export class ProductDetailAdapter {
     return {
       name: product.name,
       description: product.description,
+      detailDescription: product.detailDescription || "",
       price: product.price,
       discountRate: product.discountRate,
       quantity: product.quantity,
