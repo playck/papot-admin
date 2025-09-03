@@ -17,7 +17,7 @@ export class ProductDetailAdapter {
       quantity: product.quantity,
       isPublished: product.isPublished,
       categoryId: product.categoryId,
-      images: product.images.map((img) => img.imageUrl),
+      images: product.image_urls || [],
       badges: product.badges,
     };
   }

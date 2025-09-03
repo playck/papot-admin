@@ -13,6 +13,7 @@ interface ProductResponse {
   quantity: number;
   is_published: boolean;
   category_id: number;
+  image_urls?: string[];
   badges: string[];
   created_at: string;
   updated_at: string;
@@ -57,6 +58,7 @@ export class ProductResponseAdapter {
         ? this.toCategoryFromDatabase(productResponse.categories)
         : undefined,
       images: imagesResponse ? this.toProductImages(imagesResponse) : [],
+      image_urls: productResponse.image_urls || [], // image_urls 필드 매핑
       badges: productResponse.badges || [],
       createdAt: productResponse.created_at,
       updatedAt: productResponse.updated_at,

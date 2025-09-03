@@ -8,15 +8,11 @@ import { ProductResponseAdapter } from "../../adapter/ProductResponseAdapter";
 
 export const createProduct = async (productData: CreateProductRequest) => {
   try {
-    // 1. 상품 기본 정보만 추출 (이미지 제외)
-    const { images, ...productInfo } = productData;
-
-    // 2. products 테이블에 기본 상품 정보 삽입
+    // 1. 상품 정보를 products 테이블에 저장
     const { data: product, error: productError } = await supabase
       .from("products")
       .insert({
-        ...productInfo,
-        uploaded_by: productData.uploaded_by,
+        ...productData,
       })
       .select()
       .single();
@@ -27,11 +23,11 @@ export const createProduct = async (productData: CreateProductRequest) => {
 
     const productId = product.id;
 
-    // 3. 이미지 메타데이터를 product_images 테이블에 삽입
-    if (images && images.length > 0) {
-      const imageInserts = images.map((imageData, index) => ({
+    // 2. product_images 테이블에도 이미지 메타데이터 저장
+    if (productData.image_urls && productData.image_urls.length > 0) {
+      const imageInserts = productData.image_urls.map((imageUrl, index) => ({
         product_id: productId,
-        image_url: imageData.url,
+        image_url: imageUrl,
         display_order: index,
         is_primary: index === 0,
       }));
@@ -41,6 +37,7 @@ export const createProduct = async (productData: CreateProductRequest) => {
         .insert(imageInserts);
 
       if (imageError) {
+        // 실패 시 생성된 상품도 삭제
         await supabase.from("products").delete().eq("id", productId);
         throw new Error(`이미지 정보 저장 실패: ${imageError.message}`);
       }
@@ -101,9 +98,9 @@ export const getProductById = async (productId: string): Promise<Product> => {
 
 export const updateProduct = async (productData: UpdateProductRequest) => {
   try {
-    const { id, images, ...productInfo } = productData;
+    const { id, ...productInfo } = productData;
 
-    // 1. 상품 기본 정보 업데이트
+    // 1. 상품 정보 업데이트 (image_urls 포함)
     const { data: product, error: productError } = await supabase
       .from("products")
       .update({
@@ -118,9 +115,9 @@ export const updateProduct = async (productData: UpdateProductRequest) => {
       throw new Error(`상품 업데이트 실패: ${productError.message}`);
     }
 
-    // 2. 이미지 업데이트
-    if (images && images.length > 0) {
-      await updateProductImages(id, images);
+    // 2. product_images 테이블도 업데이트
+    if (productData.image_urls) {
+      await updateProductImages(id, productData.image_urls);
     }
 
     return product;
@@ -130,10 +127,10 @@ export const updateProduct = async (productData: UpdateProductRequest) => {
   }
 };
 
-// 이미지 리스트 업데이트 함수
+// product_images 테이블 업데이트 함수
 const updateProductImages = async (
   productId: string,
-  newImages: { url: string }[]
+  newImageUrls: string[]
 ) => {
   try {
     // 1. 기존 이미지 조회
@@ -148,15 +145,15 @@ const updateProductImages = async (
     }
 
     const existingUrls = existingImages?.map((img) => img.image_url) || [];
-    const newUrls = newImages.map((img) => img.url);
 
     // 2. 삭제할 이미지 찾기
     const imagesToDelete =
-      existingImages?.filter((img) => !newUrls.includes(img.image_url)) || [];
+      existingImages?.filter((img) => !newImageUrls.includes(img.image_url)) ||
+      [];
 
     // 3. 추가할 이미지 찾기
-    const imagesToAdd = newImages.filter(
-      (img) => !existingUrls.includes(img.url)
+    const imagesToAdd = newImageUrls.filter(
+      (url) => !existingUrls.includes(url)
     );
 
     // 4. 삭제 실행
@@ -172,16 +169,13 @@ const updateProductImages = async (
       }
     }
 
-    // 5. 새 이미지 추가 (올바른 순서로)
+    // 5. 새 이미지 추가
     if (imagesToAdd.length > 0) {
-      const imageInserts = imagesToAdd.map((imageData) => {
-        const targetIndex = newImages.findIndex(
-          (img) => img.url === imageData.url
-        );
-
+      const imageInserts = imagesToAdd.map((imageUrl) => {
+        const targetIndex = newImageUrls.findIndex((url) => url === imageUrl);
         return {
           product_id: productId,
-          image_url: imageData.url,
+          image_url: imageUrl,
           display_order: targetIndex,
           is_primary: targetIndex === 0,
         };
@@ -196,13 +190,14 @@ const updateProductImages = async (
       }
     }
 
-    // 6. 기존 이미지 순서 업데이트 (순서가 변경된 것만)
+    // 6. 기존 이미지 순서 업데이트
     const remainingImages =
-      existingImages?.filter((img) => newUrls.includes(img.image_url)) || [];
+      existingImages?.filter((img) => newImageUrls.includes(img.image_url)) ||
+      [];
 
     for (const existingImg of remainingImages) {
-      const newIndex = newImages.findIndex(
-        (img) => img.url === existingImg.image_url
+      const newIndex = newImageUrls.findIndex(
+        (url) => url === existingImg.image_url
       );
 
       const needsUpdate =

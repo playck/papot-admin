@@ -50,9 +50,7 @@ export default class ProductFormAdapter {
       quantity: Math.floor(this.formData.quantity),
       is_published: this.formData.isPublished,
       category_id: this.categoryId,
-      images: this.formData.images.map((image) => ({
-        url: image,
-      })),
+      image_urls: this.formData.images,
       badges: this.convertBadges(this.formData.badges),
       uploaded_by: this.userId,
     };
@@ -74,9 +72,7 @@ export default class ProductFormAdapter {
       quantity: Math.floor(this.formData.quantity),
       is_published: this.formData.isPublished,
       category_id: this.categoryId,
-      images: this.formData.images.map((image) => ({
-        url: image,
-      })),
+      image_urls: this.formData.images,
       badges: this.convertBadges(this.formData.badges),
     };
   }
