@@ -8,6 +8,7 @@ interface ProductResponse {
   id: string;
   name: string;
   description: string;
+  detail_description?: string;
   price: number;
   discount_rate?: number;
   quantity: number;
@@ -49,6 +50,7 @@ export class ProductResponseAdapter {
       id: productResponse.id,
       name: productResponse.name,
       description: productResponse.description,
+      detailDescription: productResponse.detail_description || "",
       price: productResponse.price,
       discountRate: productResponse.discount_rate || 0,
       quantity: productResponse.quantity,
