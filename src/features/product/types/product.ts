@@ -2,6 +2,7 @@ export interface Product {
   id: string;
   name: string;
   description: string;
+  detailDescription?: string;
   price: number;
   discountRate: number;
   quantity: number;
@@ -40,6 +41,7 @@ export interface Category {
 export interface CreateProductRequest {
   name: string;
   description: string;
+  detail_description?: string;
   price: number;
   discount_rate?: number;
   quantity: number;

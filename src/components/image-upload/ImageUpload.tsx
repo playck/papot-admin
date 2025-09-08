@@ -4,7 +4,7 @@ import * as React from "react";
 import { Upload, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
-import { useImageUpload } from "./hooks/useImageUpload";
+import { useImageInputUpload } from "./hooks/useImageUpload";
 
 const GRID_RESPONSIVE_CLASSES = "grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
 const MAX_FILE_SIZE_MB = 5;
@@ -55,7 +55,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     handleDrop,
     handleRemoveImage,
     handleClick,
-  } = useImageUpload({ images, onChange, maxFiles });
+  } = useImageInputUpload({ images, onChange, maxFiles });
 
   return (
     <div className={cn("space-y-4", className)}>
