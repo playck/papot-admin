@@ -17,7 +17,6 @@ export interface EditorProps {
   initialValue?: string;
   placeholder?: string;
   onChange?: (value: string) => void;
-  onImageUpload?: (file: File) => Promise<string>;
   className?: string;
   disabled?: boolean;
   height?: number;
@@ -31,7 +30,6 @@ const Editor = forwardRef<EditorRef, EditorProps>(
       initialValue = "",
       placeholder = "내용을 입력 해 주세요.",
       onChange,
-      onImageUpload,
       className = "",
       disabled = false,
       showPreview = true,
@@ -60,7 +58,8 @@ const Editor = forwardRef<EditorRef, EditorProps>(
       onChange?.(newValue);
     };
 
-    const defaultImageUpload = async (file: File): Promise<string> => {
+    // 이미지를 Base64로 변환 (미리보기용)
+    const convertToBase64 = async (file: File): Promise<string> => {
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = () => {
@@ -81,8 +80,6 @@ const Editor = forwardRef<EditorRef, EditorProps>(
       const file = e.target.files?.[0];
       if (!file) return;
 
-      const uploadHandler = onImageUpload || defaultImageUpload;
-
       if (!file.type.startsWith("image/")) {
         alert("이미지 파일만 업로드할 수 있습니다.");
         return;
@@ -95,12 +92,13 @@ const Editor = forwardRef<EditorRef, EditorProps>(
 
       setIsUploading(true);
       try {
-        const imageUrl = await uploadHandler(file);
+        // 항상 Base64로 변환 (미리보기용)
+        const imageUrl = await convertToBase64(file);
         const imageHtml = `<img src="${imageUrl}" alt="업로드된 이미지" style="max-width: 100%; height: auto;" />`;
         const newValue = editorValue + imageHtml;
         setEditorValue(newValue);
         onChange?.(newValue);
-      } catch (e) {
+      } catch {
         alert("이미지 업로드에 실패했습니다.");
       } finally {
         setIsUploading(false);

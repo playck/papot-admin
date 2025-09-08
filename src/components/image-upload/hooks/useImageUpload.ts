@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, useRef } from "react";
 import { useImageUpload } from "@/services/hooks/useImageUpload";
 
 interface UseImageUploadProps {
@@ -15,9 +15,9 @@ export const useImageInputUpload = ({
   maxFiles,
 }: UseImageUploadProps) => {
   const { uploadMultiple, isUploading: isSupabaseUploading } = useImageUpload();
-  const [isDragOver, setIsDragOver] = React.useState(false);
-  const [isUploading, setIsUploading] = React.useState(false);
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isMaxReached = images.length >= maxFiles;
 
