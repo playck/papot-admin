@@ -168,7 +168,6 @@ export default function OrderListView() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">주문 관리</h1>
-          <p className="text-gray-600">주문 현황을 확인하고 관리하세요</p>
         </div>
       </div>
 
@@ -181,7 +180,6 @@ export default function OrderListView() {
 
       {isLoading && <LoadingSpinner message="주문 목록을 불러오는 중..." />}
 
-      {/* 빈 상태 */}
       {isOrderEmpty && <OrderListEmpty searchTerm={activeSearchTerm} />}
 
       {/* 주문 테이블 */}

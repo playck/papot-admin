@@ -43,18 +43,6 @@ export default function OrderRow({ order }: OrderRowProps) {
           {order.shippingAddress}
         </div>
       </TableCell>
-      <TableCell>
-        {order.orderNotes ? (
-          <div
-            className="max-w-24 truncate text-sm text-gray-600"
-            title={order.orderNotes}
-          >
-            {order.orderNotes}
-          </div>
-        ) : (
-          <span className="text-gray-400">-</span>
-        )}
-      </TableCell>
     </TableRow>
   );
 }

@@ -35,7 +35,6 @@ export default function OrderTable({
               <TableHead>상태</TableHead>
               <TableHead>결제방법</TableHead>
               <TableHead>배송지</TableHead>
-              <TableHead>주문 비고</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -43,7 +42,7 @@ export default function OrderTable({
               orders.map((order) => <OrderRow key={order.id} order={order} />)
             ) : (
               <TableRow>
-                <TableCell colSpan={10} className="text-center py-8">
+                <TableCell colSpan={9} className="text-center py-8">
                   <div className="text-gray-500">
                     {filteredSearchTerm ? (
                       <>
