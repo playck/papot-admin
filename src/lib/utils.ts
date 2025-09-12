@@ -9,12 +9,11 @@ export function formatPrice(price: number) {
   return new Intl.NumberFormat("ko-KR").format(price) + "원";
 }
 
-export function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
+export function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("ko-KR", {
+    style: "currency",
+    currency: "KRW",
+  }).format(amount);
 }
 
 export function extractBase64ImagesFromHtml(html: string) {

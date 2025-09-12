@@ -37,7 +37,7 @@ export default function ProductSearchBar({
       <div className="relative flex-1">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         <Input
-          placeholder="상품명을 입력하고     검색 버튼을 눌러주세요!"
+          placeholder="상품명을 입력하고 검색 버튼을 눌러주세요!"
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
           onKeyPress={handleKeyPress}
