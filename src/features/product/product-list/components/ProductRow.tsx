@@ -1,11 +1,12 @@
 "use client";
 
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Product } from "@/features/product/types/product";
-import { formatDate, formatPrice } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 
 interface ProductRowProps {
   product: Product;
@@ -58,7 +59,7 @@ export default function ProductRow({ product }: ProductRowProps) {
         </div>
       </TableCell>
       <TableCell className="text-gray-500">
-        {formatDate(product.createdAt)}
+        {dayjs(product.createdAt).format("YYYY-MM-DD")}
       </TableCell>
       <TableCell className="text-right">
         <Button
