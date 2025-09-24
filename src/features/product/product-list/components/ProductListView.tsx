@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useProductSearch } from "../services/hooks/useProductList";
 import { useToast } from "@/providers/toast-provider";
+import { useAuth } from "@/services/hooks/useAuth";
 import { ErrorMessage } from "@/components";
 import { LoadingSpinner } from "@/components/ui";
 
@@ -12,6 +14,15 @@ import ProductTable from "./ProductTable";
 export default function ProductListView() {
   const [searchTerm, setSearchTerm] = useState("");
   const { showError } = useToast();
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const router = useRouter();
+
+  // 🔒 인증 확인 및 리다이렉트
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, authLoading, router]);
 
   const {
     data: productData,
@@ -19,6 +30,14 @@ export default function ProductListView() {
     error,
     refetch,
   } = useProductSearch(searchTerm, 300);
+
+  if (authLoading) {
+    return <LoadingSpinner message="인증 확인 중..." />;
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const handleSearchProduct = (searchKeyword: string) => {
     setSearchTerm(searchKeyword);

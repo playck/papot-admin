@@ -12,10 +12,9 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { id: "dashboard", title: "대시보드", icon: "📊", path: "/dashboard" },
   { id: "products", title: "상품 관리", icon: "🪴", path: "/product/list" },
   { id: "orders", title: "주문 관리", icon: "🛒", path: "/order/list" },
-  { id: "settings", title: "설정", icon: "⚙️", path: "/settings" },
+  // { id: "settings", title: "설정", icon: "⚙️", path: "/settings" },
 ];
 
 export default function Sidebar() {

@@ -86,18 +86,6 @@ export default function Home() {
               <Button className="w-full">상품 등록하기</Button>
             </CardContent>
           </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>카테고리 관리</CardTitle>
-              <CardDescription>
-                상품 카테고리를 생성하고 관리합니다.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full">카테고리 관리</Button>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
