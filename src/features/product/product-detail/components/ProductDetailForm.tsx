@@ -222,7 +222,7 @@ export default function ProductDetailForm({
                             <RadioGroupItem value="2" />
                           </FormControl>
                           <FormLabel className="font-normal cursor-pointer mb-0">
-                            꽃
+                            도자기
                           </FormLabel>
                         </FormItem>
                       </RadioGroup>
