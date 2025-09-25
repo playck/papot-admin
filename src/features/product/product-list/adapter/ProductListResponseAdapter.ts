@@ -28,9 +28,24 @@ class ProductListResponseAdapter {
       updatedAt: item.updated_at as string,
       uploadedBy: item.uploaded_by as string,
       images: this.adaptProductImages(item.product_images || [], item.id),
+      image_urls: this.extractImageUrls(item.product_images || []),
       badges: Array.isArray(item.badges) ? item.badges : [], // 배지는 배열로 저장됨
       category: this.adaptCategory(item.categories),
     };
+  }
+
+  /**
+   * 이미지 URL 배열 추출
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private extractImageUrls(images: any[]): string[] {
+    return (
+      images
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .sort((a: any, b: any) => a.display_order - b.display_order)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((img: any) => img.image_url as string)
+    );
   }
 
   /**

@@ -1,7 +1,7 @@
 export interface Order {
   id: string;
   orderNumber: string;
-  userId?: string; // 사용자 ID (로그인 사용자)
+  userId?: string;
   productId: string;
   productName: string;
   orderDate: string;

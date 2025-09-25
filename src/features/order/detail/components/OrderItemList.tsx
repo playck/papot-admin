@@ -37,12 +37,16 @@ export default function OrderItemList({ items }: OrderItemListProps) {
               <TableRow key={item.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    {item.productImage && (
+                    {item.productImage ? (
                       <img
                         src={item.productImage}
                         alt={item.productName}
                         className="w-12 h-12 object-cover rounded"
                       />
+                    ) : (
+                      <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                        <span className="text-xs text-gray-500">IMG</span>
+                      </div>
                     )}
                     <span className="font-medium">{item.productName}</span>
                   </div>

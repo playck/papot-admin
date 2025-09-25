@@ -10,9 +10,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import OrderRow from "./OrderRow";
+import { Order } from "../../types/order";
 
 interface OrderTableProps {
-  orders: any[];
+  orders: Order[];
   filteredSearchTerm: string;
 }
 
