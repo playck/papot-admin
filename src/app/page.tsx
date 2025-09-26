@@ -54,7 +54,7 @@ export default function Home() {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">PAPOT 관리자</h1>
             <p className="text-gray-600 mt-2">
-              안녕하세요, 종진님! 오늘도 화이팅! 🌱
+              안녕하세요, 수경 사장님! 오늘도 화이팅! 🌱
             </p>
           </div>
           <Button onClick={handleSignOut} variant="outline">
