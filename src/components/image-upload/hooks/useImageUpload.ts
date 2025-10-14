@@ -7,12 +7,14 @@ interface UseImageUploadProps {
   images: string[];
   onChange?: (images: string[]) => void;
   maxFiles: number;
+  pathPrefix?: string;
 }
 
 export const useImageInputUpload = ({
   images,
   onChange,
   maxFiles,
+  pathPrefix = "products",
 }: UseImageUploadProps) => {
   const { uploadMultiple, isUploading: isSupabaseUploading } = useImageUpload();
   const [isDragOver, setIsDragOver] = useState(false);
@@ -32,7 +34,7 @@ export const useImageInputUpload = ({
 
     try {
       const newImageUrls = await uploadMultiple(validFiles, {
-        pathPrefix: "products",
+        pathPrefix,
         includeUserId: true,
         addTimestamp: true,
       });

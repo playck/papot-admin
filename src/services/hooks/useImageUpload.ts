@@ -100,7 +100,7 @@ export const useImageUpload = (): UseImageUploadReturn => {
       const urlObj = new URL(url);
       const pathSegments = urlObj.pathname.split("/");
 
-      // product-images 버킷을 찾습니다
+      // product-images 버킷을 찾기
       const bucketIndex = pathSegments.findIndex(
         (segment) => segment === "product-images"
       );

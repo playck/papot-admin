@@ -33,6 +33,7 @@ interface ImageUploadProps {
   className?: string;
   disabled?: boolean;
   maxFiles?: number;
+  pathPrefix?: string;
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -43,6 +44,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   className,
   disabled = false,
   maxFiles = 5,
+  pathPrefix = "products",
 }) => {
   const {
     isDragOver,
@@ -55,7 +57,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     handleDrop,
     handleRemoveImage,
     handleClick,
-  } = useImageInputUpload({ images, onChange, maxFiles });
+  } = useImageInputUpload({ images, onChange, maxFiles, pathPrefix });
 
   return (
     <div className={cn("space-y-4", className)}>
