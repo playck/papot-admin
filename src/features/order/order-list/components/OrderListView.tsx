@@ -21,7 +21,6 @@ export default function OrderListView() {
   const router = useRouter();
 
   useEffect(() => {
-    // 인증 확인 및 리다이렉트
     if (!authLoading && !isAuthenticated) {
       router.push("/login");
     }
