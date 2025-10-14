@@ -34,24 +34,15 @@ export const useMainImageSettings = () => {
   const handleImageChange = async (images: string[]) => {
     if (images.length === 0 && settings?.main_image_url) {
       await handleImageDelete();
-    } else {
+    } else if (images.length > 0 && settings?.id) {
       setMainImage(images);
-    }
-  };
-
-  const handleSave = async () => {
-    if (!settings?.id) {
-      showError("설정 정보를 찾을 수 없습니다.");
-      return;
-    }
-
-    try {
-      const imageUrl = mainImage.length > 0 ? mainImage[0] : null;
-      await updateMainImage({ settingsId: settings.id, imageUrl });
-      showSuccess("설정이 저장되었습니다.");
-    } catch (error) {
-      console.error("저장 실패:", error);
-      showError("설정 저장에 실패했습니다.");
+      try {
+        await updateMainImage({ settingsId: settings.id, imageUrl: images[0] });
+        showSuccess("메인 이미지가 저장되었습니다.");
+      } catch (error) {
+        console.error("이미지 저장 실패:", error);
+        showError("이미지 저장에 실패했습니다.");
+      }
     }
   };
 
@@ -61,6 +52,5 @@ export const useMainImageSettings = () => {
     isUploading,
     isSaving,
     handleImageChange,
-    handleSave,
   };
 };
