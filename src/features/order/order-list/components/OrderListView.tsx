@@ -4,72 +4,27 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/services/hooks/useAuth";
 import { LoadingSpinner } from "@/components/ui";
+import { useOrderList } from "../services";
 
 import OrderSearchBar from "./OrderSearchBar";
 import OrderTable from "./OrderTable";
 import OrderListEmpty from "./OrderListEmpty";
 
-import { Order } from "../../types/order";
-
 export default function OrderListView() {
-  const [inputValue, setInputValue] = useState("");
-  const [activeSearchTerm, setActiveSearchTerm] = useState("");
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const { isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
+
+  const { data, isLoading, error } = useOrderList({
+    search: searchTerm,
+    limit: 50,
+  });
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       router.push("/login");
     }
   }, [isAuthenticated, authLoading, router]);
-
-  // 주문 데이터 로드
-  useEffect(() => {
-    const fetchOrders = async () => {
-      if (!isAuthenticated) return;
-
-      try {
-        setIsLoading(true);
-        // TODO: 실제 API 호출로 교체
-        // const response = await orderAPI.getOrders();
-        // setOrders(response.orders);
-
-        // 임시로 빈 배열 설정
-        setOrders([]);
-      } catch (error) {
-        console.error("주문 목록 조회 실패:", error);
-        setOrders([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchOrders();
-  }, [isAuthenticated]);
-
-  // 검색어가 변경될 때 필터링 실행
-  useEffect(() => {
-    if (!activeSearchTerm.trim()) {
-      setFilteredOrders(orders);
-    } else {
-      const filtered = orders.filter(
-        (order) =>
-          order.orderNumber
-            .toLowerCase()
-            .includes(activeSearchTerm.toLowerCase()) ||
-          order.productName
-            .toLowerCase()
-            .includes(activeSearchTerm.toLowerCase()) ||
-          order.customerName
-            .toLowerCase()
-            .includes(activeSearchTerm.toLowerCase())
-      );
-      setFilteredOrders(filtered);
-    }
-  }, [activeSearchTerm, orders]);
 
   if (authLoading) {
     return <LoadingSpinner message="인증 확인 중..." />;
@@ -79,16 +34,17 @@ export default function OrderListView() {
     return null;
   }
 
-  const handleSearchOrder = (searchKeyword: string) => {
-    setActiveSearchTerm(searchKeyword);
+  const orders = data?.orders || [];
+  const isOrderEmpty = !isLoading && orders.length === 0;
+  const isExistOrder = !isLoading && orders.length > 0;
+
+  const handleSearch = (keyword: string) => {
+    setSearchTerm(keyword);
   };
 
   const handleClearSearch = () => {
-    setActiveSearchTerm("");
+    setSearchTerm("");
   };
-
-  const isOrderEmpty = !isLoading && filteredOrders.length === 0;
-  const isExistOrder = !isLoading && filteredOrders.length > 0;
 
   return (
     <div className="space-y-6">
@@ -99,22 +55,24 @@ export default function OrderListView() {
       </div>
 
       <OrderSearchBar
-        searchTerm={inputValue}
-        onSearchChange={setInputValue}
-        onSearch={handleSearchOrder}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        onSearch={handleSearch}
         onClear={handleClearSearch}
       />
 
       {isLoading && <LoadingSpinner message="주문 목록을 불러오는 중..." />}
 
-      {isOrderEmpty && <OrderListEmpty searchTerm={activeSearchTerm} />}
+      {error && (
+        <div className="text-center py-12">
+          <p className="text-red-600">주문 목록을 불러오는데 실패했습니다.</p>
+        </div>
+      )}
 
-      {/* 주문 테이블 */}
+      {isOrderEmpty && <OrderListEmpty searchTerm={searchTerm} />}
+
       {isExistOrder && (
-        <OrderTable
-          orders={filteredOrders}
-          filteredSearchTerm={activeSearchTerm}
-        />
+        <OrderTable orders={orders} filteredSearchTerm={searchTerm} />
       )}
     </div>
   );
