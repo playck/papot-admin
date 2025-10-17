@@ -1,42 +1,38 @@
 export interface Order {
   id: string;
-  orderNumber: string;
-  userId?: string;
-  productId: string;
-  productName: string;
-  orderDate: string;
-  totalAmount: number;
-  quantity: number;
-  customerName: string;
-  customerPhone: string;
-  shippingAddress: string;
-  paymentMethod: "카드" | "계좌이체" | "현금";
-  shippingFee: number;
-  discountAmount: number;
-  status:
-    | "주문접수"
-    | "결제완료"
-    | "배송준비중"
-    | "배송중"
-    | "배송완료"
-    | "취소"
-    | "반품";
-  orderNotes?: string;
-  items: OrderItem[]; // 주문 아이템 배열
-  createdAt: string;
-  updatedAt: string;
+  order_number: string;
+  customer_id: string;
+  recipient_name: string;
+  recipient_phone: string;
+  shipping_address: string;
+  shipping_detail_address?: string;
+  shipping_zip_code: string;
+  delivery_request?: string;
+  total_product_price: number;
+  shipping_fee: number;
+  coupon_discount: number;
+  point_discount: number;
+  final_price: number;
+  status: string;
+  items: OrderItem[];
+  created_at: string;
+  updated_at: string;
 }
 
 export interface OrderItem {
   id: string;
-  orderId: string;
-  productId: string;
-  productName: string; // 주문 당시 상품명 (비정규화)
-  productImage?: string; // 대표 이미지
+  order_id: string;
+  product_id: string;
+  product_name: string;
+  product_description?: string;
+  product_price: number;
+  product_discount_rate: number;
+  product_image_url?: string;
   quantity: number;
-  unitPrice: number; // 주문 당시 단가
-  totalPrice: number; // quantity * unitPrice
-  createdAt: string;
+  unit_price: number;
+  total_price: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface OrderListResponse {
