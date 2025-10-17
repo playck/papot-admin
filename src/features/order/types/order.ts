@@ -38,6 +38,13 @@ export interface OrderItem {
 export interface OrderListResponse {
   orders: Order[];
   total: number;
-  page: number;
-  limit: number;
+}
+
+export interface OrderListParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+  sortBy?: "created_at" | "final_price" | "order_number";
+  sortOrder?: "asc" | "desc";
 }
