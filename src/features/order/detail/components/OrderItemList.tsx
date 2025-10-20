@@ -33,14 +33,14 @@ export default function OrderItemList({ items }: OrderItemListProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {items.map((item) => (
+            {items?.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    {item.productImage ? (
+                    {item.product_image_url ? (
                       <img
-                        src={item.productImage}
-                        alt={item.productName}
+                        src={item.product_image_url}
+                        alt={item.product_name}
                         className="w-12 h-12 object-cover rounded"
                       />
                     ) : (
@@ -48,15 +48,15 @@ export default function OrderItemList({ items }: OrderItemListProps) {
                         <span className="text-xs text-gray-500">IMG</span>
                       </div>
                     )}
-                    <span className="font-medium">{item.productName}</span>
+                    <span className="font-medium">{item.product_name}</span>
                   </div>
                 </TableCell>
                 <TableCell className="text-center">{item.quantity}개</TableCell>
                 <TableCell className="text-right">
-                  {formatCurrency(item.unitPrice)}
+                  {formatCurrency(item.unit_price)}
                 </TableCell>
                 <TableCell className="text-right font-semibold">
-                  {formatCurrency(item.totalPrice)}
+                  {formatCurrency(item.total_price)}
                 </TableCell>
               </TableRow>
             ))}
