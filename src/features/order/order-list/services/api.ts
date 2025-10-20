@@ -60,8 +60,13 @@ export const getOrderList = async (
       throw new Error(error.message);
     }
 
+    const mappedOrders = (data || []).map((order) => ({
+      ...order,
+      items: order.order_items || [],
+    }));
+
     return {
-      orders: (data || []) as Order[],
+      orders: mappedOrders as Order[],
       total: count || 0,
     };
   } catch (error) {
