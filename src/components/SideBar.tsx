@@ -13,6 +13,7 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { id: "products", title: "상품 관리", icon: "🪴", path: "/product/list" },
+  { id: "categories", title: "카테고리 관리", icon: "📁", path: "/category" },
   { id: "orders", title: "주문 관리", icon: "🛒", path: "/order/list" },
   { id: "settings", title: "설정", icon: "⚙️", path: "/settings" },
 ];
