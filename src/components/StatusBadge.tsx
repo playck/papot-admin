@@ -17,7 +17,10 @@ const getStatusColor = (status: Order["status"]) => {
     반품: "bg-orange-100 text-orange-800",
   };
 
-  return statusColors[status] || "bg-gray-100 text-gray-800";
+  return (
+    statusColors[status as keyof typeof statusColors] ||
+    "bg-gray-100 text-gray-800"
+  );
 };
 
 const getSizeClasses = (size: "sm" | "md" | "lg") => {
