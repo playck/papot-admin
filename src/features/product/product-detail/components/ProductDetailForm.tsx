@@ -15,12 +15,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ImageUpload, BadgeInput } from "@/components";
 import { Editor } from "@/components/editor";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuth } from "@/services/hooks/useAuth";
 import {
   useProductDetailForm,
   ProductDetailFormData,
 } from "../hooks/useProductDetailForm";
 import { useProductCreate } from "../hooks/useProductCreate";
+import { useCategories } from "@/features/category/services/hooks";
 
 interface ProductDetailFormProps {
   initialData?: Partial<ProductDetailFormData>;
@@ -41,6 +43,18 @@ export default function ProductDetailForm({
     userId: user?.id,
     onFormReset: () => methods.reset(),
   });
+  const { data: categoriesData, isLoading: isCategoriesLoading } =
+    useCategories();
+
+  if (isCategoriesLoading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  const categories = categoriesData?.categories || [];
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -127,24 +141,29 @@ export default function ProductDetailForm({
                           field.onChange(parseInt(value))
                         }
                         value={field.value?.toString()}
-                        className="flex space-x-3 mt-4"
+                        className="flex flex-wrap gap-3 mt-4"
                       >
-                        <FormItem className="flex items-center space-x-2 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="1" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer mb-0">
-                            화분
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-2 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="2" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer mb-0">
-                            도자기
-                          </FormLabel>
-                        </FormItem>
+                        {categories.length === 0 ? (
+                          <p className="text-sm text-gray-500">
+                            등록된 카테고리가 없습니다.
+                          </p>
+                        ) : (
+                          categories.map((category) => (
+                            <FormItem
+                              key={category.id}
+                              className="flex items-center space-x-2 space-y-0"
+                            >
+                              <FormControl>
+                                <RadioGroupItem
+                                  value={category.id.toString()}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal cursor-pointer mb-0">
+                                {category.name}
+                              </FormLabel>
+                            </FormItem>
+                          ))
+                        )}
                       </RadioGroup>
                     </FormControl>
                     <FormMessage />
