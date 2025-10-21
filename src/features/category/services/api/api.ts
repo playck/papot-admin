@@ -92,7 +92,6 @@ export async function updateCategory(
     .from("categories")
     .update({
       name: categoryData.name,
-      updated_at: new Date().toISOString(),
     })
     .eq("id", categoryData.id)
     .select()
