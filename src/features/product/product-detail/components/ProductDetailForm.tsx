@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -16,15 +15,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ImageUpload, BadgeInput } from "@/components";
 import { Editor } from "@/components/editor";
-import { useToast } from "@/providers/toast-provider";
 import { useAuth } from "@/services/hooks/useAuth";
 import {
   useProductDetailForm,
   ProductDetailFormData,
 } from "../hooks/useProductDetailForm";
-import { useEditorImageManager } from "../hooks/useEditorImageManager";
-import { useCreateProduct } from "../services/useCreateProduct";
-import { useUpdateProduct } from "../services/useUpdateProduct";
+import { useProductCreate } from "../hooks/useProductCreate";
 
 interface ProductDetailFormProps {
   initialData?: Partial<ProductDetailFormData>;
@@ -38,16 +34,13 @@ export default function ProductDetailForm({
   productId,
 }: ProductDetailFormProps) {
   const { user } = useAuth();
-  const router = useRouter();
   const { methods, handleSubmit } = useProductDetailForm(initialData);
-  const { mutate: createProductMutation, isPending: isCreating } =
-    useCreateProduct();
-  const { mutate: updateProductMutation, isPending: isUpdating } =
-    useUpdateProduct();
-  const { showSuccess, showError } = useToast();
-  const { uploadBase64ImagesToStorage } = useEditorImageManager();
-
-  const isPending = isCreating || isUpdating;
+  const { handleProductSubmit, isPending } = useProductCreate({
+    isEditMode,
+    productId,
+    userId: user?.id,
+    onFormReset: () => methods.reset(),
+  });
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -60,80 +53,7 @@ export default function ProductDetailForm({
         <CardContent>
           <Form {...methods}>
             <form
-              onSubmit={handleSubmit(async (data) => {
-                try {
-                  const processedDescription =
-                    await uploadBase64ImagesToStorage(
-                      data.detailDescription || ""
-                    );
-
-                  const processedData = {
-                    ...data,
-                    detailDescription: processedDescription,
-                  };
-
-                  const successCallback = async () => {
-                    showSuccess(
-                      isEditMode ? "상품 수정 완료!" : "상품 등록 완료!",
-                      isEditMode
-                        ? "상품이 성공적으로 수정되었습니다."
-                        : "상품이 성공적으로 등록되었습니다."
-                    );
-
-                    if (!isEditMode) {
-                      methods.reset();
-                    }
-
-                    setTimeout(() => {
-                      router.push("/product/list");
-                    }, 1500);
-                  };
-
-                  const errorCallback = (error: Error) => {
-                    showError(
-                      isEditMode ? "상품 수정 실패" : "상품 등록 실패",
-                      error.message ||
-                        (isEditMode
-                          ? "상품 수정 중 오류가 발생했습니다."
-                          : "상품 등록 중 오류가 발생했습니다.")
-                    );
-                  };
-
-                  if (isEditMode && productId) {
-                    // 수정 모드
-                    updateProductMutation(
-                      {
-                        productId,
-                        productData: processedData,
-                        categoryId: processedData.categoryId,
-                      },
-                      {
-                        onSuccess: successCallback,
-                        onError: errorCallback,
-                      }
-                    );
-                  } else {
-                    // 생성 모드
-                    createProductMutation(
-                      {
-                        productData: processedData,
-                        categoryId: processedData.categoryId,
-                        userId: user?.id,
-                      },
-                      {
-                        onSuccess: successCallback,
-                        onError: errorCallback,
-                      }
-                    );
-                  }
-                } catch (error) {
-                  console.error("폼 제출 중 오류:", error);
-                  showError(
-                    "처리 중 오류 발생",
-                    "요청 처리 중 오류가 발생했습니다."
-                  );
-                }
-              })}
+              onSubmit={handleSubmit(handleProductSubmit)}
               className="space-y-6"
             >
               {/* 상품 기본 정보 */}
