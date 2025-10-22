@@ -32,6 +32,19 @@ const getSizeClasses = (size: "sm" | "md" | "lg") => {
   return sizeClasses[size];
 };
 
+const getOrderStatusText = (status: Order["status"]): string => {
+  const statusMap = {
+    pending: "결제 대기",
+    confirmed: "결제 완료",
+    processing: "상품 준비중",
+    shipped: "배송중",
+    delivered: "배송 완료",
+    cancelled: "주문 취소",
+  };
+
+  return statusMap[status as keyof typeof statusMap] || "알 수 없음";
+};
+
 export default function StatusBadge({
   status,
   size = "sm",
@@ -43,7 +56,7 @@ export default function StatusBadge({
         status
       )} ${getSizeClasses(size)} ${className}`}
     >
-      {status}
+      {getOrderStatusText(status)}
     </span>
   );
 }
