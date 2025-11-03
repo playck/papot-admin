@@ -5,6 +5,7 @@ import {
   UpdateCategoryRequest,
   CategoryListResponse,
 } from "../../types/category";
+import buildCategoryTree from "../helper";
 
 /**
  * 카테고리 목록 조회
@@ -24,12 +25,15 @@ export async function getCategories(): Promise<CategoryListResponse> {
     data?.map((item) => ({
       id: item.id,
       name: item.name,
+      parentId: item.parent_id,
       createdAt: item.created_at,
       updatedAt: item.updated_at,
     })) || [];
 
+  const treeCategories = buildCategoryTree(categories);
+
   return {
-    categories,
+    categories: treeCategories,
     total: count || 0,
   };
 }
@@ -51,6 +55,7 @@ export async function getCategoryById(id: number): Promise<Category> {
   return {
     id: data.id,
     name: data.name,
+    parentId: data.parent_id,
     createdAt: data.created_at,
     updatedAt: data.updated_at,
   };
@@ -66,6 +71,7 @@ export async function createCategory(
     .from("categories")
     .insert({
       name: categoryData.name,
+      parent_id: categoryData.parentId || null,
     })
     .select()
     .single();
@@ -77,6 +83,7 @@ export async function createCategory(
   return {
     id: data.id,
     name: data.name,
+    parentId: data.parent_id,
     createdAt: data.created_at,
     updatedAt: data.updated_at,
   };
@@ -92,6 +99,7 @@ export async function updateCategory(
     .from("categories")
     .update({
       name: categoryData.name,
+      parent_id: categoryData.parentId || null,
     })
     .eq("id", categoryData.id)
     .select()
@@ -104,6 +112,7 @@ export async function updateCategory(
   return {
     id: data.id,
     name: data.name,
+    parentId: data.parent_id,
     createdAt: data.created_at,
     updatedAt: data.updated_at,
   };
