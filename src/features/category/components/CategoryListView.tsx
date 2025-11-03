@@ -20,6 +20,9 @@ export default function CategoryListView() {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
+  const [parentIdForNewCategory, setParentIdForNewCategory] = useState<
+    number | null
+  >(null);
 
   const { data, isLoading } = useCategories();
   const { mutate: createCategory, isPending: isCreating } = useCreateCategory();
@@ -31,11 +34,19 @@ export default function CategoryListView() {
 
   const handleCreate = () => {
     setSelectedCategory(null);
+    setParentIdForNewCategory(null);
+    setIsDialogOpen(true);
+  };
+
+  const handleAddSubCategory = (parentId: number) => {
+    setSelectedCategory(null);
+    setParentIdForNewCategory(parentId);
     setIsDialogOpen(true);
   };
 
   const handleEdit = (category: Category) => {
     setSelectedCategory(category);
+    setParentIdForNewCategory(null);
     setIsDialogOpen(true);
   };
 
@@ -52,19 +63,24 @@ export default function CategoryListView() {
     });
   };
 
-  const handleSubmit = (formData: { name: string }) => {
+  const handleSubmit = (formData: {
+    name: string;
+    parentId?: number | null;
+  }) => {
     if (selectedCategory) {
       // 수정
       updateCategory(
         {
           id: selectedCategory.id,
           name: formData.name,
+          parentId: formData.parentId,
         },
         {
           onSuccess: () => {
             showSuccess("수정 완료", "카테고리가 수정되었습니다.");
             setIsDialogOpen(false);
             setSelectedCategory(null);
+            setParentIdForNewCategory(null);
           },
           onError: (error) => {
             showError("수정 실패", error.message);
@@ -76,11 +92,16 @@ export default function CategoryListView() {
       createCategory(
         {
           name: formData.name,
+          parentId:
+            formData.parentId !== undefined
+              ? formData.parentId
+              : parentIdForNewCategory,
         },
         {
           onSuccess: () => {
             showSuccess("추가 완료", "카테고리가 추가되었습니다.");
             setIsDialogOpen(false);
+            setParentIdForNewCategory(null);
           },
           onError: (error) => {
             showError("추가 실패", error.message);
@@ -93,6 +114,7 @@ export default function CategoryListView() {
   const handleCancel = () => {
     setIsDialogOpen(false);
     setSelectedCategory(null);
+    setParentIdForNewCategory(null);
   };
 
   if (isLoading) {
@@ -106,14 +128,9 @@ export default function CategoryListView() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <div>
-          <p className="text-sm text-gray-500">
-            전체 {data?.total || 0}개의 카테고리
-          </p>
-        </div>
         <Button onClick={handleCreate}>
-          <Plus className="h-4 w-4 mr-2" />
-          카테고리 추가
+          <Plus className="h-4 w-4" />
+          최상위 카테고리 추가
         </Button>
       </div>
 
@@ -121,12 +138,15 @@ export default function CategoryListView() {
         categories={data?.categories || []}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onAddSubCategory={handleAddSubCategory}
         isDeleting={isDeleting}
       />
 
       {isDialogOpen && (
         <CategoryFormDialog
           category={selectedCategory}
+          categories={data?.categories || []}
+          parentId={parentIdForNewCategory}
           onSubmit={handleSubmit}
           onCancel={handleCancel}
           isPending={isPending}
