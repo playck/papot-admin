@@ -5,7 +5,6 @@ import { Category } from "../types/category";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2, Plus, ChevronDown, ChevronRight } from "lucide-react";
-import dayjs from "dayjs";
 
 interface CategoryRowProps {
   category: Category;
@@ -61,9 +60,6 @@ export default function CategoryRow({
               <span className="text-xs text-gray-400 ml-1">(하위)</span>
             )}
           </div>
-        </TableCell>
-        <TableCell className="text-gray-500">
-          {dayjs(category?.createdAt || "").format("YYYY-MM-DD")}
         </TableCell>
         <TableCell>
           <div className="flex items-center justify-center gap-2">

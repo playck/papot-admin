@@ -46,14 +46,13 @@ export default function CategoryTable({
           <TableRow>
             <TableHead className="w-[100px]">ID</TableHead>
             <TableHead>카테고리명</TableHead>
-            <TableHead className="w-[150px]">생성일</TableHead>
             <TableHead className="w-[280px] text-center">관리</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {categories.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="h-32 text-center">
+              <TableCell colSpan={3} className="h-32 text-center">
                 등록된 카테고리가 없습니다.
               </TableCell>
             </TableRow>
